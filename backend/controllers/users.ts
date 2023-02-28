@@ -4,6 +4,7 @@ import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User, { IUser } from "../models/user";
+import { AuthenticatedRequest } from "../middleware/authMiddleware";
 
 // @desc    Register new user
 // @route   POST /api/users
@@ -13,8 +14,9 @@ export const registerUser = asyncHandler(
         const { email, password } = req.body;
 
         if (!email || !password) {
-            res.status(400);
-            throw new Error("Please add all fields");
+            res.status(400).json({
+                msg: "Please add all fields",
+            });
         }
 
         // Check if user exists
@@ -53,7 +55,41 @@ export const registerUser = asyncHandler(
 // @desc    Authenticate a user
 // @route   POST /api/users/login
 // @access  Public
-const loginUser = asyncHandler(async (req: Request, res: Response) => {});
+export const loginUser = asyncHandler(async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        res.status(400).json({
+            msg: "Please add all fields",
+        });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (user && (await bcrypt.compare(password, user.password))) {
+        res.json({
+            _id: user._id,
+            email: user.email,
+            name: user.name,
+            bio: user.bio,
+            phone: user.phone,
+            token: generateToken(user._id),
+        });
+    } else {
+        res.status(400).json({
+            msg: "Invalid credentials",
+        });
+    }
+});
+
+// @desc    Get user data
+// @route   GET /api/users/me
+// @access  Private
+export const getMe = asyncHandler(
+    (req: AuthenticatedRequest, res: Response) => {
+        res.status(200).json(req.user);
+    }
+);
 
 // Generate JWT
 const generateToken = (id: ObjectId) => {
