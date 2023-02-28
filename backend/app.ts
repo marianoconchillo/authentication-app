@@ -1,7 +1,11 @@
 import dotenv from "dotenv";
-import Server from "./models/server";
+import Server from "./server";
 
 dotenv.config();
 
 const server = new Server();
 server.listen();
+
+const app = server.getApp();
+
+export { app };
