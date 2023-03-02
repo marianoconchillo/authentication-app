@@ -74,7 +74,7 @@ export const FormLogin = ({ loginForm }: Props) => {
                 </div>
             </div>
             <button
-                className="rounded-lg py-1.5 bg-blueButton text-white"
+                className="rounded-lg py-1.5 bg-blueButton text-white font-bold"
                 onClick={handleClick}
                 disabled={form.email === "" || form.password === ""}
             >
@@ -83,7 +83,7 @@ export const FormLogin = ({ loginForm }: Props) => {
 
             {authState.isLoading && <Loading />}
 
-            {authState.error && (
+            {authState.error && isEmailValid && (
                 <p className="text-sm mt-5 text-red-500 text-center">
                     {authState.error}
                 </p>

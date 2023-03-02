@@ -8,8 +8,12 @@ interface Props {
     children: JSX.Element | JSX.Element[];
 }
 
+// Get user from localStorage
+const userString = localStorage.getItem("user");
+const user: User = userString ? JSON.parse(userString) : null;
+
 const INITIAL_STATE: AuthState = {
-    user: null,
+    user: user,
     isLoading: false,
     error: null,
 };
@@ -32,6 +36,8 @@ export const AuthProvider = ({ children }: Props) => {
                 "/users/login",
                 requestBody
             );
+
+            localStorage.setItem("user", JSON.stringify(data));
 
             dispatch({ type: "LOGIN_SUCCESS", payload: { user: data } });
         } catch (error: any) {

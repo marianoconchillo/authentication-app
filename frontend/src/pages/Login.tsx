@@ -1,7 +1,21 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FormLogin } from "../components/FormLogin";
+import { AuthContext } from "../context/AuthContext";
 
 export const Login = () => {
+    const navigate = useNavigate();
+
+    const {
+        authState: { user },
+    } = useContext(AuthContext);
+
+    useEffect(() => {
+        if (user) {
+            navigate("/profile");
+        }
+    }, [user, navigate]);
+
     const [loginForm, setLoginForm] = useState<boolean>(false);
 
     return (
