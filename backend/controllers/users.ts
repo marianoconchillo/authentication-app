@@ -11,7 +11,7 @@ import { AuthenticatedRequest } from "../middleware/authMiddleware";
 // @access  Public
 export const registerUser = asyncHandler(
     async (req: Request, res: Response) => {
-        const { email, password } = req.body;
+        const { email, password, name, bio, phone } = req.body;
 
         if (!email || !password) {
             res.status(400).json({
@@ -36,6 +36,9 @@ export const registerUser = asyncHandler(
         const user: IUser = await User.create({
             email,
             password: hashedPassword,
+            name,
+            bio,
+            phone,
         });
 
         if (user) {
