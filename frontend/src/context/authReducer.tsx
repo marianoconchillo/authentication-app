@@ -4,7 +4,8 @@ import { AuthState } from "./AuthContext";
 type AuthAction =
     | { type: "LOGIN_REQUEST" }
     | { type: "LOGIN_SUCCESS"; payload: { user: User } }
-    | { type: "LOGIN_FAILURE"; payload: { error: string } };
+    | { type: "LOGIN_FAILURE"; payload: { error: string } }
+    | { type: "LOGOUT" };
 
 export const authReducer = (
     state: AuthState,
@@ -32,6 +33,13 @@ export const authReducer = (
                 user: null,
                 error: action.payload.error,
             };
+
+        case "LOGOUT": {
+            return {
+                ...state,
+                user: null,
+            };
+        }
 
         default:
             return state;

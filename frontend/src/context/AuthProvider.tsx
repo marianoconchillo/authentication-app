@@ -50,7 +50,10 @@ export const AuthProvider = ({ children }: Props) => {
 
     const register = (email: string, password: string) => {};
 
-    const logout = () => {};
+    const logout = () => {
+        localStorage.removeItem("user");
+        dispatch({ type: "LOGOUT" });
+    };
 
     return (
         <AuthContext.Provider
