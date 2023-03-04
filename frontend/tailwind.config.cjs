@@ -15,6 +15,7 @@ module.exports = {
                 input: "#828282",
                 blueButton: "#2F80ED",
                 login: "#2D9CDB",
+                label: "#4F4F4F",
             },
         },
     },
