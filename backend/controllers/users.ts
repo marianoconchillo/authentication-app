@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ObjectId } from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -34,11 +34,11 @@ export const registerUser = asyncHandler(
         const hashedPassword: string = await bcrypt.hash(password, salt);
 
         const user: IUser = await User.create({
-            email,
+            email: email || "",
             password: hashedPassword,
-            name,
-            bio,
-            phone,
+            name: name || "",
+            bio: bio || "",
+            phone: phone || "",
         });
 
         if (user) {
@@ -86,13 +86,39 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
 });
 
 // @desc    Get user data
-// @route   GET /api/users/me
+// @route   PATCH /api/users/:id
 // @access  Private
-export const getMe = asyncHandler(
-    (req: AuthenticatedRequest, res: Response) => {
-        res.status(200).json(req.user);
+export const updateUser = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { name, bio, phone, password } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        res.status(400).json({ msg: "Invalid user ID" });
     }
-);
+
+    let user: IUser | null = await User.findById(id);
+
+    if (user) {
+        user.name = name || user.name;
+        user.bio = bio || user.bio;
+        user.phone = phone || user.phone;
+
+        const updatedUser: IUser = await user.save();
+
+        res.status(200).json({
+            _id: updatedUser._id,
+            email: updatedUser.email,
+            name: updatedUser.name,
+            bio: updatedUser.bio,
+            phone: updatedUser.phone,
+            token: generateToken(updatedUser._id),
+        });
+    } else {
+        res.status(404).json({
+            msg: "User not found",
+        });
+    }
+});
 
 // Generate JWT
 const generateToken = (id: ObjectId) => {

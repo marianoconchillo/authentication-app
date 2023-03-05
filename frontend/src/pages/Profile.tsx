@@ -4,7 +4,7 @@ import { EditUserInfo } from "../components/EditUserInfo";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { UserInfo } from "../components/UserInfo";
-import { AuthContext } from "../context/AuthContext";
+import { UserContext } from "../context/User/UserContext";
 
 export const Profile = () => {
     const navigate = useNavigate();
@@ -12,8 +12,8 @@ export const Profile = () => {
     const [edit, setEdit] = useState<boolean>(false);
 
     const {
-        authState: { user },
-    } = useContext(AuthContext);
+        userState: { user },
+    } = useContext(UserContext);
 
     useEffect(() => {
         if (!user) {

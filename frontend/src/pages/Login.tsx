@@ -3,14 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { Footer } from "../components/Footer";
 import { FormLogin } from "../components/FormLogin";
 import { Navbar } from "../components/Navbar";
-import { AuthContext } from "../context/AuthContext";
+import { UserContext } from "../context/User/UserContext";
 
 export const Login = () => {
     const navigate = useNavigate();
 
     const {
-        authState: { user },
-    } = useContext(AuthContext);
+        userState: { user },
+    } = useContext(UserContext);
 
     useEffect(() => {
         if (user) {
@@ -18,7 +18,7 @@ export const Login = () => {
         }
     }, [user, navigate]);
 
-    const [loginForm, setLoginForm] = useState<boolean>(false);
+    const [loginForm, setLoginForm] = useState<boolean>(true);
 
     return (
         <div className="md:p-5">

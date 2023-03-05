@@ -2,8 +2,8 @@ import { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import { useForm } from "../hooks/useForm";
-import { AuthContext } from "../context/AuthContext";
 import { Loading } from "./Loading";
+import { UserContext } from "../context/User/UserContext";
 
 interface Props {
     loginForm: boolean;
@@ -20,7 +20,7 @@ export const FormLogin = ({ loginForm }: Props) => {
         password: "",
     });
 
-    const { login, register, authState } = useContext(AuthContext);
+    const { login, register, userState } = useContext(UserContext);
 
     const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
 
@@ -81,11 +81,11 @@ export const FormLogin = ({ loginForm }: Props) => {
                 {loginForm ? `Login` : `Start coding now`}
             </button>
 
-            {authState.isLoading && <Loading />}
+            {userState.isLoading && <Loading />}
 
-            {authState.error && isEmailValid && (
+            {userState.error && isEmailValid && (
                 <p className="text-sm mt-5 text-red-500 text-center">
-                    {authState.error}
+                    {userState.error}
                 </p>
             )}
 

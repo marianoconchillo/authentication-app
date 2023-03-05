@@ -1,11 +1,37 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import { useContext } from "react";
+import { UserContext } from "../context/User/UserContext";
+import { useForm } from "../hooks/useForm";
+import { Loading } from "./Loading";
 
 interface Props {
     setEdit: (value: boolean) => void;
 }
 
+type FormFields = {
+    name: string;
+    bio: string;
+    phone: string;
+    password: string;
+};
+
 export const EditUserInfo = ({ setEdit }: Props) => {
+    const { userState, updateProfile } = useContext(UserContext);
+
+    const { state: form, onChange } = useForm<FormFields>({
+        name: userState.user?.name || "",
+        bio: userState.user?.bio || "",
+        phone: userState.user?.phone || "",
+        password: "",
+    });
+
+    const handleEditClick = (e: any) => {
+        e.preventDefault();
+        const { name, bio, phone, password } = form;
+        updateProfile(name, bio, phone, password);
+    };
+
     return (
         <>
             <button
@@ -35,6 +61,10 @@ export const EditUserInfo = ({ setEdit }: Props) => {
                             placeholder="Enter your name..."
                             className="mt-1.5 w-full bg-transparent focus:outline-none border border-gray-400 rounded-lg px-4 py-3 text-sm"
                             type="text"
+                            value={form.name}
+                            onChange={(value) =>
+                                onChange(value.target.value, "name")
+                            }
                         />
                     </div>
                     <div>
@@ -45,6 +75,10 @@ export const EditUserInfo = ({ setEdit }: Props) => {
                             placeholder="Enter your bio..."
                             className="mt-1.5 w-full bg-transparent focus:outline-none border border-gray-400 rounded-lg px-4 py-3 text-sm resize-none"
                             rows={4}
+                            value={form.bio}
+                            onChange={(value) =>
+                                onChange(value.target.value, "bio")
+                            }
                         />
                     </div>
                     <div>
@@ -55,6 +89,10 @@ export const EditUserInfo = ({ setEdit }: Props) => {
                             placeholder="Enter your phone..."
                             className="mt-1.5 w-full bg-transparent focus:outline-none border border-gray-400 rounded-lg px-4 py-3 text-sm"
                             type="text"
+                            value={form.phone}
+                            onChange={(value) =>
+                                onChange(value.target.value, "phone")
+                            }
                         />
                     </div>
                     <div>
@@ -65,11 +103,31 @@ export const EditUserInfo = ({ setEdit }: Props) => {
                             placeholder="Enter your new password..."
                             className="mt-1.5 w-full bg-transparent focus:outline-none border border-gray-400 rounded-lg px-4 py-3 text-sm"
                             type="password"
+                            onChange={(value) =>
+                                onChange(value.target.value, "password")
+                            }
                         />
                     </div>
-                    <button className="rounded-lg py-2 px-10 bg-blueButton text-white font-bold self-center md:self-start">
+                    <button
+                        className="rounded-lg py-2 px-10 bg-blueButton text-white font-bold self-center md:self-start"
+                        onClick={handleEditClick}
+                        disabled={
+                            form.name === "" &&
+                            form.bio === "" &&
+                            form.phone === "" &&
+                            form.password === ""
+                        }
+                    >
                         Save
                     </button>
+
+                    {userState.isLoading && <Loading />}
+
+                    {userState.error && (
+                        <p className="text-sm mt-5 text-red-500 text-center">
+                            {userState.error}
+                        </p>
+                    )}
                 </form>
             </div>
         </>

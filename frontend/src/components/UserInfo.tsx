@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { UserContext } from "../context/User/UserContext";
 
 interface Props {
     setEdit: (value: boolean) => void;
@@ -9,8 +9,8 @@ interface Props {
 
 export const UserInfo = ({ setEdit }: Props) => {
     const {
-        authState: { user },
-    } = useContext(AuthContext);
+        userState: { user },
+    } = useContext(UserContext);
 
     return (
         <>

@@ -9,13 +9,13 @@ import {
     faUsers,
     faArrowRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
-import { AuthContext } from "../context/AuthContext";
+import { UserContext } from "../context/User/UserContext";
 
 export const Navbar = () => {
     const {
-        authState: { user },
+        userState: { user },
         logout,
-    } = useContext(AuthContext);
+    } = useContext(UserContext);
 
     const [click, setClick] = useState<boolean>(false);
 
@@ -35,7 +35,7 @@ export const Navbar = () => {
             />
 
             {user && (
-                <div className="relative">
+                <div className="relative w-full flex justify-end space-y-14">
                     <div className="flex items-center space-x-3">
                         <div className="border px-3 py-2 rounded-lg">
                             <FontAwesomeIcon
@@ -57,7 +57,7 @@ export const Navbar = () => {
                         </div>
                     </div>
                     {click && (
-                        <div className="hidden md:block px-4 py-1 shadow absolute mt-3 border rounded-lg divide-y divide-gray-100">
+                        <div className="hidden md:block right-0 py-1 shadow absolute mt-3 border rounded-lg divide-y divide-gray-100">
                             <ul className="text-sm text-gray-700">
                                 <li className="px-4 py-2 rounded hover:bg-gray-100 cursor-pointer flex items-center justify-start space-x-5">
                                     <FontAwesomeIcon
