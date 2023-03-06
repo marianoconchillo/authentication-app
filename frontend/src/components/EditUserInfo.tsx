@@ -1,6 +1,11 @@
+import { useContext, useState } from "react";
+import Dropzone from "react-dropzone";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
-import { useContext } from "react";
+import {
+    faAngleLeft,
+    faCamera,
+    faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import { UserContext } from "../context/User/UserContext";
 import { useForm } from "../hooks/useForm";
 import { Loading } from "./Loading";
@@ -10,6 +15,7 @@ interface Props {
 }
 
 type FormFields = {
+    pictureUrl: string;
     name: string;
     bio: string;
     phone: string;
@@ -20,6 +26,7 @@ export const EditUserInfo = ({ setEdit }: Props) => {
     const { userState, updateProfile } = useContext(UserContext);
 
     const { state: form, onChange } = useForm<FormFields>({
+        pictureUrl: userState.user?.pictureUrl || "",
         name: userState.user?.name || "",
         bio: userState.user?.bio || "",
         phone: userState.user?.phone || "",
@@ -30,6 +37,12 @@ export const EditUserInfo = ({ setEdit }: Props) => {
         e.preventDefault();
         const { name, bio, phone, password } = form;
         updateProfile(name, bio, phone, password);
+    };
+
+    const [file, setFile] = useState<File | null>(null);
+
+    const handleDrop = (acceptedFiles: File[]) => {
+        setFile(acceptedFiles[0]);
     };
 
     return (
@@ -53,6 +66,43 @@ export const EditUserInfo = ({ setEdit }: Props) => {
                     </h4>
                 </div>
                 <form className="flex flex-col space-y-5">
+                    <div>
+                        {form.pictureUrl ? (
+                            <img
+                                className="object-cover h-48 w-96 "
+                                src={form.pictureUrl}
+                            />
+                        ) : file ? (
+                            <div className="flex items-center space-x-5">
+                                <h4 className="text-input italic text-sm">
+                                    {file.name}
+                                </h4>
+                                <FontAwesomeIcon
+                                    icon={faXmark}
+                                    className="text-red-500 border px-3 py-1 rounded cursor-pointer"
+                                    onClick={() => setFile(null)}
+                                />
+                            </div>
+                        ) : (
+                            <div className="flex items-center space-x-5">
+                                <div className="border-2 border-dashed w-20 h-20 flex justify-center items-center cursor-pointer">
+                                    <Dropzone onDrop={handleDrop}>
+                                        {({ getRootProps, getInputProps }) => (
+                                            <div {...getRootProps()}>
+                                                <input {...getInputProps()} />
+                                                <FontAwesomeIcon
+                                                    icon={faCamera}
+                                                    size="2x"
+                                                    className="text-input"
+                                                />
+                                            </div>
+                                        )}
+                                    </Dropzone>
+                                </div>
+                                <h4 className="text-input">CHANGE PHOTO</h4>
+                            </div>
+                        )}
+                    </div>
                     <div>
                         <label className="text-label font-medium text-sm">
                             Name

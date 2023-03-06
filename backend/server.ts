@@ -1,4 +1,5 @@
 import express, { Application } from "express";
+import fileUpload from "express-fileupload";
 import cors from "cors";
 import connectDB from "./db/config";
 import userRoutes from "./routes/user";
@@ -26,6 +27,12 @@ class Server {
     private middlewares() {
         this.app.use(cors());
         this.app.use(express.json());
+        this.app.use(
+            fileUpload({
+                useTempFiles: true,
+                tempFileDir: "./uploads",
+            })
+        );
     }
 
     private dbConnection = async () => {

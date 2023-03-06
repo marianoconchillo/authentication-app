@@ -4,7 +4,7 @@ import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User, { IUser } from "../models/user";
-import { AuthenticatedRequest } from "../middleware/authMiddleware";
+import { uploadImage } from "../utils/cloudinary";
 
 // @desc    Register new user
 // @route   POST /api/users
@@ -39,6 +39,7 @@ export const registerUser = asyncHandler(
             name: name || "",
             bio: bio || "",
             phone: phone || "",
+            pictureUrl: "2",
         });
 
         if (user) {
@@ -94,6 +95,11 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
         res.status(400).json({ msg: "Invalid user ID" });
+    }
+
+    // Image
+    if (req.files?.image) {
+        console.log(req.files.image);
     }
 
     let user: IUser | null = await User.findById(id);
