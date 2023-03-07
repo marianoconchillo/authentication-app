@@ -3,6 +3,8 @@ import mongoose, { ObjectId } from "mongoose";
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { UploadApiResponse } from "cloudinary";
+import fs from "fs-extra";
 import User, { IUser } from "../models/user";
 import { uploadImage } from "../utils/cloudinary";
 
@@ -11,7 +13,7 @@ import { uploadImage } from "../utils/cloudinary";
 // @access  Public
 export const registerUser = asyncHandler(
     async (req: Request, res: Response) => {
-        const { email, password, name, bio, phone } = req.body;
+        const { email, password } = req.body;
 
         if (!email || !password) {
             res.status(400).json({
@@ -28,18 +30,15 @@ export const registerUser = asyncHandler(
             });
         }
 
-        // Hash password
-        const saltRounds: number = 10;
-        const salt: string = await bcrypt.genSalt(saltRounds);
-        const hashedPassword: string = await bcrypt.hash(password, salt);
+        const hashedPassword: string = await hashPassword(password);
 
         const user: IUser = await User.create({
             email: email || "",
             password: hashedPassword,
-            name: name || "",
-            bio: bio || "",
-            phone: phone || "",
-            pictureUrl: "2",
+            name: "",
+            bio: "",
+            phone: "",
+            pictureUrl: "",
         });
 
         if (user) {
@@ -97,17 +96,36 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
         res.status(400).json({ msg: "Invalid user ID" });
     }
 
-    // Image
-    if (req.files?.image) {
-        console.log(req.files.image);
-    }
-
     let user: IUser | null = await User.findById(id);
 
     if (user) {
+        // Image
+        if (req.files) {
+            try {
+                const file = Array.isArray(req.files.file)
+                    ? req.files.file[0]
+                    : req.files.file;
+
+                const result: UploadApiResponse = await uploadImage(
+                    file.tempFilePath
+                );
+
+                await fs.unlink(file.tempFilePath);
+
+                user.pictureUrl = result.secure_url;
+            } catch (error) {
+                res.status(400).json({
+                    msg: "Error uploading the image",
+                });
+            }
+        }
+
+        if (password !== "") user.password = await hashPassword(password);
+
         user.name = name || user.name;
         user.bio = bio || user.bio;
         user.phone = phone || user.phone;
+        user.pictureUrl = user.pictureUrl;
 
         const updatedUser: IUser = await user.save();
 
@@ -117,6 +135,7 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
             name: updatedUser.name,
             bio: updatedUser.bio,
             phone: updatedUser.phone,
+            pictureUrl: updatedUser.pictureUrl,
             token: generateToken(updatedUser._id),
         });
     } else {
@@ -125,6 +144,13 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
         });
     }
 });
+
+// Hash Password
+const hashPassword = async (password: string): Promise<string> => {
+    const saltRounds: number = 10;
+    const salt: string = await bcrypt.genSalt(saltRounds);
+    return await bcrypt.hash(password, salt);
+};
 
 // Generate JWT
 const generateToken = (id: ObjectId) => {

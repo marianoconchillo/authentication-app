@@ -44,11 +44,18 @@ export const UserInfo = ({ setEdit }: Props) => {
                     <h4 className="text-input font-medium opacity-60">PHOTO</h4>
                 </div>
                 <div className="flex flex-col items-end md:items-start justify-center col-span-3">
-                    <FontAwesomeIcon
-                        icon={faUser}
-                        size="lg"
-                        className="text-input border-2 rounded-lg px-8 py-2"
-                    />
+                    {user?.pictureUrl ? (
+                        <img
+                            className="h-16 w-16 rounded mt-1.5"
+                            src={user.pictureUrl}
+                        />
+                    ) : (
+                        <FontAwesomeIcon
+                            icon={faUser}
+                            size="lg"
+                            className="text-input border-2 rounded-lg px-8 py-2"
+                        />
+                    )}
                 </div>
 
                 {/* Row 3 */}

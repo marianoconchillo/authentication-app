@@ -34,6 +34,7 @@ interface UpdateRequestBody {
     bio: string;
     phone: string;
     password: string;
+    file: File | null;
 }
 
 export const UserProvider = ({ children }: Props) => {
@@ -80,12 +81,7 @@ export const UserProvider = ({ children }: Props) => {
         }
     };
 
-    const updateProfile = async (
-        name: string,
-        bio: string,
-        phone: string,
-        password: string
-    ) => {
+    const updateProfile = async (formData: FormData) => {
         try {
             dispatch({ type: "UPDATE_REQUEST" });
 
@@ -97,16 +93,9 @@ export const UserProvider = ({ children }: Props) => {
                 },
             };
 
-            const requestBody: UpdateRequestBody = {
-                name,
-                bio,
-                phone,
-                password,
-            };
-
             const { data } = await authApi.patch<User>(
                 `/users/${userState.user?._id}`,
-                requestBody,
+                formData,
                 config
             );
 

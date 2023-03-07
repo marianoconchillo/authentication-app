@@ -11,12 +11,7 @@ interface UserContextProps {
     userState: UserState;
     login: (email: string, password: string) => void;
     register: (email: string, password: string) => void;
-    updateProfile: (
-        name: string,
-        bio: string,
-        phone: string,
-        password: string
-    ) => void;
+    updateProfile: (formData: FormData) => Promise<void>;
     logout: () => void;
 }
 
