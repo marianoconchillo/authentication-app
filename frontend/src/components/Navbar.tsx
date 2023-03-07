@@ -37,13 +37,20 @@ export const Navbar = () => {
             {user && (
                 <div className="relative w-full flex justify-end space-y-14">
                     <div className="flex items-center space-x-3">
-                        <div className="border px-3 py-2 rounded-lg">
-                            <FontAwesomeIcon
-                                icon={faUser}
-                                size="lg"
-                                className="text-input"
+                        {user?.pictureUrl ? (
+                            <img
+                                className="h-9 w-9 rounded"
+                                src={user.pictureUrl}
                             />
-                        </div>
+                        ) : (
+                            <div className="border px-3 py-2 rounded-lg">
+                                <FontAwesomeIcon
+                                    icon={faUser}
+                                    size="lg"
+                                    className="text-input"
+                                />
+                            </div>
+                        )}
                         <div className="hidden md:flex items-center space-x-5">
                             <h4 className="text-sm font-semibold opacity-90">
                                 {user?.name}

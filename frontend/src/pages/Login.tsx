@@ -10,6 +10,8 @@ export const Login = () => {
 
     const {
         userState: { user },
+        loginWithGoogle,
+        loginWithFacebook,
     } = useContext(UserContext);
 
     useEffect(() => {
@@ -57,11 +59,13 @@ export const Login = () => {
                                     src="/images/Google.svg"
                                     alt="Google SVG Image"
                                     className="cursor-pointer"
+                                    onClick={loginWithGoogle}
                                 />
                                 <img
                                     src="/images/Facebook.svg"
                                     alt="Google SVG Image"
                                     className="cursor-pointer"
+                                    onClick={loginWithFacebook}
                                 />
                                 <img
                                     src="/images/Twitter.svg"

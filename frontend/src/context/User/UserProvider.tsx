@@ -1,6 +1,13 @@
+import {
+    FacebookAuthProvider,
+    GoogleAuthProvider,
+    signInWithPopup,
+    UserCredential,
+} from "firebase/auth";
 import { useReducer } from "react";
 import authApi from "../../api/authApi";
 import { User } from "../../interfaces/User";
+import { auth } from "../../services/firebaseConfig";
 import { UserContext, UserState } from "./UserContext";
 import { userReducer } from "./userReducer";
 
@@ -29,12 +36,11 @@ interface RequestBody {
     password: string;
 }
 
-interface UpdateRequestBody {
-    name: string;
-    bio: string;
-    phone: string;
-    password: string;
-    file: File | null;
+interface RequestBodyFirebase {
+    email: string;
+    displayName: string;
+    phoneNumber: string;
+    uid: string;
 }
 
 export const UserProvider = ({ children }: Props) => {
@@ -48,6 +54,74 @@ export const UserProvider = ({ children }: Props) => {
 
             const { data } = await authApi.post<User>(
                 "/users/login",
+                requestBody
+            );
+
+            localStorage.setItem("user", JSON.stringify(data));
+
+            dispatch({ type: "LOGIN_SUCCESS", payload: { user: data } });
+        } catch (error: any) {
+            dispatch({
+                type: "LOGIN_FAILURE",
+                payload: { error: error.response.data.msg },
+            });
+        }
+    };
+
+    const loginWithGoogle = async () => {
+        try {
+            dispatch({ type: "LOGIN_REQUEST" });
+
+            const googleProvider: GoogleAuthProvider = new GoogleAuthProvider();
+            const { user }: UserCredential = await signInWithPopup(
+                auth,
+                googleProvider
+            );
+
+            const requestBody: RequestBodyFirebase = {
+                displayName: user.displayName || "",
+                email: user.email || "",
+                phoneNumber: user.phoneNumber || "",
+                uid: user.uid,
+            };
+
+            const { data } = await authApi.post<User>(
+                "/users/loginFirebase",
+                requestBody
+            );
+
+            localStorage.setItem("user", JSON.stringify(data));
+
+            dispatch({ type: "LOGIN_SUCCESS", payload: { user: data } });
+        } catch (error: any) {
+            dispatch({
+                type: "LOGIN_FAILURE",
+                payload: { error: error.response.data.msg },
+            });
+        }
+    };
+
+    const loginWithFacebook = async () => {
+        try {
+            dispatch({ type: "LOGIN_REQUEST" });
+
+            const facebookProvider: FacebookAuthProvider =
+                new FacebookAuthProvider();
+
+            const { user }: UserCredential = await signInWithPopup(
+                auth,
+                facebookProvider
+            );
+
+            const requestBody: RequestBodyFirebase = {
+                displayName: user.displayName || "",
+                email: user.email || "",
+                phoneNumber: user.phoneNumber || "",
+                uid: user.uid,
+            };
+
+            const { data } = await authApi.post<User>(
+                "/users/loginFirebase",
                 requestBody
             );
 
@@ -120,6 +194,8 @@ export const UserProvider = ({ children }: Props) => {
             value={{
                 userState,
                 login,
+                loginWithGoogle,
+                loginWithFacebook,
                 register,
                 updateProfile,
                 logout,

@@ -1,10 +1,6 @@
 import { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faAngleLeft,
-    faCamera,
-    faXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { UserContext } from "../context/User/UserContext";
 import { useForm } from "../hooks/useForm";
 import { Loading } from "./Loading";

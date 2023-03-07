@@ -76,6 +76,7 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
             name: user.name,
             bio: user.bio,
             phone: user.phone,
+            pictureUrl: user.pictureUrl,
             token: generateToken(user._id),
         });
     } else {
@@ -84,6 +85,56 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
         });
     }
 });
+
+// @desc    Authenticate a user with firebase service
+// @route   POST /api/users/loginFirebase
+// @access  Public
+export const loginUserFirebase = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { email, displayName, phoneNumber, uid } = req.body;
+
+        const user = await User.findOne({ email });
+
+        if (user) {
+            res.json({
+                _id: user._id,
+                email: user.email,
+                name: user.name,
+                bio: user.bio,
+                phone: user.phone,
+                pictureUrl: user.pictureUrl,
+                token: generateToken(user._id),
+            });
+        } else {
+            const hashedPassword: string = await hashPassword(uid);
+
+            const newUser: IUser = await User.create({
+                email: email,
+                name: displayName,
+                phone: phoneNumber,
+                pictureUrl: "",
+                bio: "",
+                password: "12345",
+            });
+
+            if (newUser) {
+                res.json({
+                    _id: newUser._id,
+                    email: newUser.email,
+                    name: newUser.name,
+                    bio: newUser.bio,
+                    phone: newUser.phone,
+                    pictureUrl: newUser.pictureUrl,
+                    token: generateToken(newUser._id),
+                });
+            } else {
+                res.status(400).json({
+                    msg: "Login error with Firebase",
+                });
+            }
+        }
+    }
+);
 
 // @desc    Get user data
 // @route   PATCH /api/users/:id

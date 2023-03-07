@@ -7,9 +7,13 @@ export interface UserState {
     error: string | null;
 }
 
+export type FirebaseProvider = "FACEBOOK" | "GOOGLE" | "GITHUB" | "TWITTER";
+
 interface UserContextProps {
     userState: UserState;
     login: (email: string, password: string) => void;
+    loginWithGoogle: () => Promise<void>;
+    loginWithFacebook: () => Promise<void>;
     register: (email: string, password: string) => void;
     updateProfile: (formData: FormData) => Promise<void>;
     logout: () => void;
