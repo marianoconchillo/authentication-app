@@ -114,7 +114,7 @@ export const loginUserFirebase = asyncHandler(
                 phone: phoneNumber,
                 pictureUrl: "",
                 bio: "",
-                password: "12345",
+                password: hashedPassword,
             });
 
             if (newUser) {

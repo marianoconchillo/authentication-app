@@ -1,5 +1,6 @@
 import {
     FacebookAuthProvider,
+    GithubAuthProvider,
     GoogleAuthProvider,
     signInWithPopup,
     UserCredential,
@@ -136,6 +137,40 @@ export const UserProvider = ({ children }: Props) => {
         }
     };
 
+    const loginWithGithub = async () => {
+        try {
+            dispatch({ type: "LOGIN_REQUEST" });
+
+            const githubProvider: GithubAuthProvider = new GithubAuthProvider();
+
+            const { user }: UserCredential = await signInWithPopup(
+                auth,
+                githubProvider
+            );
+
+            const requestBody: RequestBodyFirebase = {
+                displayName: user.displayName || "",
+                email: user.email || "",
+                phoneNumber: user.phoneNumber || "",
+                uid: user.uid,
+            };
+
+            const { data } = await authApi.post<User>(
+                "/users/loginFirebase",
+                requestBody
+            );
+
+            localStorage.setItem("user", JSON.stringify(data));
+
+            dispatch({ type: "LOGIN_SUCCESS", payload: { user: data } });
+        } catch (error: any) {
+            dispatch({
+                type: "LOGIN_FAILURE",
+                payload: { error: error.response.data.msg },
+            });
+        }
+    };
+
     const register = async (email: string, password: string) => {
         try {
             dispatch({ type: "SIGNUP_REQUEST" });
@@ -196,6 +231,7 @@ export const UserProvider = ({ children }: Props) => {
                 login,
                 loginWithGoogle,
                 loginWithFacebook,
+                loginWithGithub,
                 register,
                 updateProfile,
                 logout,

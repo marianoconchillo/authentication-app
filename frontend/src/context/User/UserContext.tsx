@@ -14,6 +14,7 @@ interface UserContextProps {
     login: (email: string, password: string) => void;
     loginWithGoogle: () => Promise<void>;
     loginWithFacebook: () => Promise<void>;
+    loginWithGithub: () => Promise<void>;
     register: (email: string, password: string) => void;
     updateProfile: (formData: FormData) => Promise<void>;
     logout: () => void;

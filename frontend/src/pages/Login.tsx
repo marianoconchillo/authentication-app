@@ -12,6 +12,7 @@ export const Login = () => {
         userState: { user },
         loginWithGoogle,
         loginWithFacebook,
+        loginWithGithub,
     } = useContext(UserContext);
 
     useEffect(() => {
@@ -76,6 +77,7 @@ export const Login = () => {
                                     src="/images/Gihub.svg"
                                     alt="Google SVG Image"
                                     className="cursor-pointer"
+                                    onClick={loginWithGithub}
                                 />
                             </div>
                             <button
