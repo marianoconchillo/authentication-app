@@ -8,4 +8,4 @@ server.listen();
 
 const app = server.getApp();
 
-export { app };
+module.exports = app;
