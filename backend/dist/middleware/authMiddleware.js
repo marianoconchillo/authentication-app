@@ -25,7 +25,10 @@ const requireAuth = (0, express_async_handler_1.default)((req, res, next) => __a
             // Verify token
             const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET || "");
             // Get user from the token
-            const user = yield user_1.default.findById(decoded.id).select("-password");
+            const user = yield user_1.default.findById(decoded.id);
+            // const user = await User.findById(decoded.id).select(
+            //     "-password"
+            // );
             if (user) {
                 req.user = user;
             }

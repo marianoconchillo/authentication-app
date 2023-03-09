@@ -186,7 +186,8 @@ exports.updateUser = (0, express_async_handler_1.default)((req, res) => __awaite
 const hashPassword = (password) => __awaiter(void 0, void 0, void 0, function* () {
     const saltRounds = 10;
     const salt = yield bcrypt_1.default.genSalt(saltRounds);
-    return yield bcrypt_1.default.hash(password, salt);
+    const hashedPassword = yield bcrypt_1.default.hash(password, salt);
+    return hashedPassword;
 });
 // Generate JWT
 const generateToken = (id) => {

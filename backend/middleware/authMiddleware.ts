@@ -26,9 +26,11 @@ const requireAuth = asyncHandler(
                 ) as JwtPayload;
 
                 // Get user from the token
-                const user = await User.findById(decoded.id).select(
-                    "-password"
-                );
+                const user = await User.findById(decoded.id);
+
+                // const user = await User.findById(decoded.id).select(
+                //     "-password"
+                // );
 
                 if (user) {
                     (req as AuthenticatedRequest).user = user;

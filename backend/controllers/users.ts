@@ -4,7 +4,7 @@ import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { UploadApiResponse } from "cloudinary";
-// import fs from "fs-extra";
+import fs from "fs-extra";
 import User, { IUser } from "../models/user";
 import { uploadImage } from "../utils/cloudinary";
 
@@ -161,7 +161,7 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
                     file.tempFilePath
                 );
 
-                // await fs.unlink(file.tempFilePath);
+                await fs.unlink(file.tempFilePath);
 
                 user.pictureUrl = result.secure_url;
             } catch (error) {
@@ -200,7 +200,8 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
 const hashPassword = async (password: string): Promise<string> => {
     const saltRounds: number = 10;
     const salt: string = await bcrypt.genSalt(saltRounds);
-    return await bcrypt.hash(password, salt);
+    const hashedPassword: string = await bcrypt.hash(password, salt);
+    return hashedPassword;
 };
 
 // Generate JWT
