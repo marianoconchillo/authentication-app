@@ -22,7 +22,7 @@ export const UserInfo = ({ setEdit }: Props) => {
                     Basic info, like your name and photo
                 </h3>
             </div>
-            <div className="w-full px-2 flex flex-col divide-y space-y-3 lg:w-3/5 md:container md:border md:rounded-lg md:mx-auto md:px-10 md:pt-5">
+            <div className="w-full px-5 flex flex-col divide-y space-y-3 lg:w-3/5 md:container md:border md:rounded-lg md:mx-auto md:px-10 md:pt-5">
                 {/* Row 1 */}
                 <div className="flex justify-between items-center h-20">
                     <div className="flex flex-col items-start space-y-2">

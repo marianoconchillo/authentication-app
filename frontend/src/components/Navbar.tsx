@@ -39,8 +39,9 @@ export const Navbar = () => {
                     <div className="flex items-center space-x-3">
                         {user?.pictureUrl ? (
                             <img
-                                className="h-9 w-9 rounded"
+                                className="h-9 w-9 rounded md:pointer-events-none"
                                 src={user.pictureUrl}
+                                onClick={() => setClick(!click)}
                             />
                         ) : (
                             <div className="border px-3 py-2 rounded-lg">
@@ -64,7 +65,7 @@ export const Navbar = () => {
                         </div>
                     </div>
                     {click && (
-                        <div className="hidden md:block right-0 py-1 shadow absolute mt-3 border rounded-lg divide-y divide-gray-100">
+                        <div className="block right-0 py-1 shadow absolute mt-3 border rounded-lg divide-y divide-gray-100 bg-white">
                             <ul className="text-sm text-gray-700">
                                 <li className="px-4 py-2 rounded hover:bg-gray-100 cursor-pointer flex items-center justify-start space-x-5">
                                     <FontAwesomeIcon
