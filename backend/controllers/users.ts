@@ -4,6 +4,7 @@ import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { UploadApiResponse } from "cloudinary";
+// import fs from "fs-extra";
 import User, { IUser } from "../models/user";
 import { uploadImage } from "../utils/cloudinary";
 
@@ -159,6 +160,8 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
                 const result: UploadApiResponse = await uploadImage(
                     file.tempFilePath
                 );
+
+                // await fs.unlink(file.tempFilePath);
 
                 user.pictureUrl = result.secure_url;
             } catch (error) {

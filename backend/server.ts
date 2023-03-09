@@ -27,12 +27,12 @@ class Server {
     private middlewares() {
         this.app.use(cors());
         this.app.use(express.json());
-        this.app.use(
-            fileUpload({
-                useTempFiles: true,
-                tempFileDir: "./uploads",
-            })
-        );
+        // this.app.use(
+        //     fileUpload({
+        //         useTempFiles: true,
+        //         tempFileDir: "./uploads",
+        //     })
+        // );
     }
 
     private dbConnection = async () => {
