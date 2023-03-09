@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const express_fileupload_1 = __importDefault(require("express-fileupload"));
+const fs_1 = __importDefault(require("fs"));
 const cors_1 = __importDefault(require("cors"));
 const config_1 = __importDefault(require("./db/config"));
 const user_1 = __importDefault(require("./routes/user"));
@@ -37,6 +38,14 @@ class Server {
     middlewares() {
         this.app.use((0, cors_1.default)());
         this.app.use(express_1.default.json());
+        const uploadDir = "./uploads";
+        if (!fs_1.default.existsSync(uploadDir)) {
+            fs_1.default.mkdirSync(uploadDir);
+        }
+        // const uploadDir = "./uploads";
+        // if (!fs.existsSync(uploadDir)) {
+        //     fs.mkdirSync(uploadDir);
+        // }
         this.app.use((0, express_fileupload_1.default)({
             useTempFiles: true,
             tempFileDir: "./uploads",
