@@ -136,7 +136,7 @@ export const loginUserFirebase = asyncHandler(
     }
 );
 
-// @desc    Get user data
+// @desc    Update user data
 // @route   PATCH /api/users/:id
 // @access  Private
 export const updateUser = asyncHandler(async (req: Request, res: Response) => {

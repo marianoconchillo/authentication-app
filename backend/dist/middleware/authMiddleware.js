@@ -31,8 +31,13 @@ const requireAuth = (0, express_async_handler_1.default)((req, res, next) => __a
             // );
             if (user) {
                 req.user = user;
+                next();
             }
-            next();
+            else {
+                res.status(401).json({
+                    msg: "Not authorized",
+                });
+            }
         }
         catch (error) {
             res.status(401).json({

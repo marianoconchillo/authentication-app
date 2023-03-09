@@ -34,9 +34,12 @@ const requireAuth = asyncHandler(
 
                 if (user) {
                     (req as AuthenticatedRequest).user = user;
+                    next();
+                } else {
+                    res.status(401).json({
+                        msg: "Not authorized",
+                    });
                 }
-
-                next();
             } catch (error) {
                 res.status(401).json({
                     msg: "Not authorized",

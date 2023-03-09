@@ -132,7 +132,7 @@ exports.loginUserFirebase = (0, express_async_handler_1.default)((req, res) => _
         }
     }
 }));
-// @desc    Get user data
+// @desc    Update user data
 // @route   PATCH /api/users/:id
 // @access  Private
 exports.updateUser = (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

@@ -1,5 +1,6 @@
 import express, { Application } from "express";
 import fileUpload from "express-fileupload";
+import path from "path";
 import fs from "fs";
 import cors from "cors";
 import connectDB from "./db/config";
@@ -29,20 +30,16 @@ class Server {
         this.app.use(cors());
         this.app.use(express.json());
 
-        const uploadDir: string = "./uploads";
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir);
-        }
+        const tempDir = path.join(__dirname, "/uploads");
 
-        // const uploadDir = "./uploads";
-        // if (!fs.existsSync(uploadDir)) {
-        //     fs.mkdirSync(uploadDir);
-        // }
+        if (!fs.existsSync(tempDir)) {
+            fs.mkdtempSync(tempDir);
+        }
 
         this.app.use(
             fileUpload({
                 useTempFiles: true,
-                tempFileDir: "./uploads",
+                tempFileDir: tempDir,
             })
         );
     }
